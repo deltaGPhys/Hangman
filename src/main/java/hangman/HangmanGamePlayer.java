@@ -43,7 +43,8 @@ public class HangmanGamePlayer {
             }
         }
         for (char letter = 'a'; letter <= 'z'; letter++) { // fail safe, in case of map key collisions with low numbers of letters
-            if (!guessedLetters.contains(letter)) {
+            if (!guessedLetters.contains(String.valueOf(letter))) {
+                guessedLetters.add(String.valueOf(letter));
                 return String.valueOf(letter);
             }
         }

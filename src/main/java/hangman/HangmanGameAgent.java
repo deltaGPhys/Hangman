@@ -12,7 +12,7 @@ public class HangmanGameAgent {
     private HashSet<String> correctlyGuessedLetters;
 
     public HangmanGameAgent() {
-        this.wordLength = new Random().nextInt(10) + 2;
+        this.wordLength = new Random().nextInt(8) + 4;
         this.word = getTargetWord();
         this.numUniqueLetters = new HashSet<String>(Arrays.asList(this.word.split(""))).size();
         this.correctlyGuessedLetters = new HashSet<>();

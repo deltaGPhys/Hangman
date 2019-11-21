@@ -51,7 +51,8 @@ public class HangmanMainTest {
 
     @Test
     public void playTest() {
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < 100; i++) {
+            dictService.clear();
             game = new HangmanMain();
             hangmanGameAgent = game.getHangmanGameAgent();
             hangmanGamePlayer = game.getHangmanGamePlayer();
