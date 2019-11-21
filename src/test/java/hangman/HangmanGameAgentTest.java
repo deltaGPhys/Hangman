@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.HashSet;
 
 public class HangmanGameAgentTest {
 
@@ -43,10 +43,20 @@ public class HangmanGameAgentTest {
     }
 
     @Test
-    public void evaluateWordGuess() {
+    public void evaluateWinByLetters() {
         String word = hangmanGameAgent.getWord();
-        String guess = word.charAt(word.length()-1) + word.substring(1,word.length()-1) + word.charAt(0);
-        Assert.assertFalse(hangmanGameAgent.evaluateWordGuess(guess));
-        Assert.assertTrue(hangmanGameAgent.evaluateWordGuess(word));
+        HashSet<String> guessedLetters = hangmanGameAgent.getCorrectlyGuessedLetters();
+
+        for (String letter : word.split("")) {
+            Assert.assertTrue(hangmanGameAgent.evaluateLetterGuess(letter));
+            Assert.assertTrue(hangmanGameAgent.evaluateWinByLetters() ^ (hangmanGameAgent.getCorrectlyGuessedLetters().size() != hangmanGameAgent.getNumUniqueLetters()));
+        }
+    }
+
+    @Test
+    public void evaluateWinByGuess() {
+        String word = hangmanGameAgent.getWord();
+        Assert.assertFalse(hangmanGameAgent.evaluateWinByGuess("lforp"));
+        Assert.assertTrue(hangmanGameAgent.evaluateWinByGuess(word));
     }
 }

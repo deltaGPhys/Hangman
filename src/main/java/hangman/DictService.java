@@ -1,15 +1,11 @@
 package hangman;
 
-import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class DictService {
@@ -18,19 +14,11 @@ public class DictService {
     private static final DictService INSTANCE = new DictService();
 
     private DictService() {
-        dictionary = new ArrayList<String>();
+        this.dictionary = new ArrayList<String>();
     }
 
     public static DictService getInstance() {
         return INSTANCE;
-    }
-
-    public static void main(String[] args) {
-        DictService dictService = DictService.getInstance();
-        dictService.importJson(2);
-        for (String word : dictService.getDictionary()) {
-            System.out.println(word);
-        }
     }
 
     public void importJson(int numLetters) {
@@ -38,17 +26,12 @@ public class DictService {
 
         try {
             FileReader reader = new FileReader("dictionary.json");
-            //Read JSON file
             Object obj = jsonParser.parse(reader);
 
             JSONArray wordList = (JSONArray) obj;
-            dictionary = (ArrayList<String>) wordList.stream().filter(x -> x.toString().length() == numLetters).collect(Collectors.toList());
+            this.dictionary = (ArrayList<String>) wordList.stream().filter(x -> x.toString().length() == numLetters).collect(Collectors.toList());
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -58,16 +41,27 @@ public class DictService {
         this.dictionary.clear();
     }
 
-    public int size () {
+    public int size() {
         return this.dictionary.size();
     }
 
     public ArrayList<String> getDictionary() {
-        return dictionary;
+        return this.dictionary;
     }
 
-    public ArrayList<String> reduceDictionary(String letter) {
+    public void setDictionary(ArrayList<String> dictionary) { // testing only
+        this.dictionary = dictionary;
+    }
+
+    public ArrayList<String> reduceDictionary(String letter) { // remove words with this letter
         this.dictionary = (ArrayList<String>) this.dictionary.stream().filter(x -> !x.contains(letter)).collect(Collectors.toList());
+
+        return this.dictionary;
+    }
+
+    public ArrayList<String> restrictDictionary(String letter) { // include only words with this letter
+        this.dictionary = (ArrayList<String>) this.dictionary.stream().filter(x -> x.contains(letter)).collect(Collectors.toList());
+
         return this.dictionary;
     }
 
@@ -75,15 +69,13 @@ public class DictService {
         return this.dictionary.stream().filter(x -> x.contains(letter)).count();
     }
 
-    public String mostCommonLetter() {
-        Pair<Character, Long> max = new Pair(null, Long.MIN_VALUE);
+    public TreeMap<Long,String> getLetterFrequencies(){
+        TreeMap<Long,String> map = new TreeMap<>();
         for (char letter = 'a'; letter <= 'z'; letter++) {
             long letterFrequency = countLetterInstances(String.valueOf(letter));
-            if (letterFrequency > max.getValue()) {
-                max = new Pair(letter,letterFrequency);
-            }
+            map.put(letterFrequency,String.valueOf(letter));
         }
-        return String.valueOf(max.getKey());
+        return map;
     }
 
     public String getRandomWord() {
