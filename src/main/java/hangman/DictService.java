@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -73,7 +74,19 @@ public class DictService {
         TreeMap<Long,String> map = new TreeMap<>();
         for (char letter = 'a'; letter <= 'z'; letter++) {
             long letterFrequency = countLetterInstances(String.valueOf(letter));
+
             map.put(letterFrequency,String.valueOf(letter));
+        }
+        return map;
+    }
+
+    public TreeMap<Long,String> getLetterFrequencies(HashSet<String> guesses){
+        TreeMap<Long,String> map = new TreeMap<>();
+        for (char letter = 'a'; letter <= 'z'; letter++) {
+            if (!guesses.contains(String.valueOf(letter))) {
+                long letterFrequency = countLetterInstances(String.valueOf(letter));
+                map.put(letterFrequency, String.valueOf(letter));
+            }
         }
         return map;
     }

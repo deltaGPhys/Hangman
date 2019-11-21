@@ -1,5 +1,6 @@
 package hangman;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.TreeMap;
 
@@ -8,6 +9,7 @@ public class HangmanGamePlayer {
     private HashSet<String> guessedLetters;
     private int wordLength;
     private DictService dictService;
+    //private java.util.ArrayList<String> ArrayList;
 
     public HangmanGamePlayer(int wordLength) {
         this.dictService = DictService.getInstance();
@@ -34,18 +36,12 @@ public class HangmanGamePlayer {
     }
 
     public String guessLetter() {
-        TreeMap<Long,String> letterMap = dictService.getLetterFrequencies();
+        TreeMap<Long,String> letterMap = dictService.getLetterFrequencies(guessedLetters);
         int i = 0;
         for (String letter : letterMap.descendingMap().values()) {
             if (!guessedLetters.contains(letter)) {
                 guessedLetters.add(letter);
                 return letter;
-            }
-        }
-        for (char letter = 'a'; letter <= 'z'; letter++) { // fail safe, in case of map key collisions with low numbers of letters
-            if (!guessedLetters.contains(String.valueOf(letter))) {
-                guessedLetters.add(String.valueOf(letter));
-                return String.valueOf(letter);
             }
         }
         return null;
