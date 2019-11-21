@@ -35,12 +35,18 @@ public class HangmanGameAgentTest {
 
     @Test
     public void evaluateLetterGuess() {
-        String word = hangmanGameAgent.getWord();
-        String guess = "a";
-        Assert.assertEquals(word.contains(guess));
+        for (int i = 0; i < 100; i++) {
+            String word = hangmanGameAgent.getWord();
+            String guess = "a";
+            Assert.assertEquals(word.contains(guess), hangmanGameAgent.evaluateLetterGuess(guess));
+        }
     }
 
     @Test
     public void evaluateWordGuess() {
+        String word = hangmanGameAgent.getWord();
+        String guess = word.charAt(word.length()-1) + word.substring(1,word.length()-1) + word.charAt(0);
+        Assert.assertFalse(hangmanGameAgent.evaluateWordGuess(guess));
+        Assert.assertTrue(hangmanGameAgent.evaluateWordGuess(word));
     }
 }
